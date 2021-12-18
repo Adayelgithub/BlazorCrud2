@@ -1,0 +1,39 @@
+﻿
+@page "/eliminarcerveza/{Id:int}"
+
+
+@using Data
+@using System.Net.Http
+@using System.Net.Http.Json
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+
+<h3>EliminarCerveza</h3>
+
+<p>Deseas eliminar el @Id ? </p>
+
+<div>
+    <button @onclick="Cancelar">Cancelar</button>
+    <button @onclick="Eliminar" >Eliminar</button>
+</div>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Respuesta<object> oRespuesta = new Respuesta<object>();
+    public string Url = "/api/Cerveza";
+
+    private void Cancelar() => NavigationManager.NavigateTo("/cervezas");
+   
+    private async Task Eliminar()
+    {
+
+        var response = await Http.DeleteAsync(Url +"/" + Id);
+        oRespuesta = response.Content.ReadFromJsonAsync<Respuesta<object>>().Result;
+        NavigationManager.NavigateTo("/cervezas");
+
+    }
+}
